@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# This script will create a u-boot binary for movinand/mmc boot
+#
+
+# padding to 256k u-boot
+cat u-boot.bin >> u-boot-2x.bin
+cat u-boot.bin >> u-boot-2x.bin
+split -d -a 1 -b 256k u-boot-2x.bin u-boot-256k.bin
+
+# make BL1 u-boot (8kb)
+split -d -a 2 -b 8k u-boot.bin u-boot-8k.bin
+
+# concat the BL1 behind of padded 256k binary
+cat u-boot-8k.bin00 >> u-boot-256k.bin0
+
+# rename and chmod
+mv u-boot-256k.bin0 u-boot-movi.bin
+chmod 777 u-boot-movi.bin
+
+# remove temp files
+rm -f u-boot-8k*
+rm -f u-boot-256k*
+rm -f u-boot-2x.bin

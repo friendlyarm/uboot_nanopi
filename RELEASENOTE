@@ -1,0 +1,113 @@
+
+*****************************************************************
+*								*
+*	      Release Note for Samsung U-Boot			*
+*								*
+*****************************************************************
+
+Confidential Proprietary of Samsung Electronics Co., Ltd
+Copyright (c) 2008 Samsung Electronics, Inc. All Rights Reserved
+
+==================================================================
+* Important Notice
+==================================================================
+The information in this publication has been carefully checked and is 
+believed to be entirely accurate at the time of publication.
+Samsung assumes no responsibility, however, for possible errors or 
+omissions, or for any consequences resulting from the use of 
+the information contained herein.
+
+Samsung reserves the right to make changes in its products or 
+product specifications with the intent to improve function or 
+design at any time and without notice and is not required to 
+update this documentation to reflect such changes.
+
+This publication does not convey to a purchaser of semiconductor 
+devices described herein any license under the patent rights of 
+Samsung or others.
+
+Samsung makes no warranty, representation, or guarantee regarding 
+the suitability of its products for any particular purpose, 
+nor does Samsung assume any liability arising out of the application or 
+use of any product or circuit and specifically disclaims any and 
+all liability, including without limitation any consequential or 
+incidental damages.
+
+"Typical" parameters can and do vary in different applications.
+All operating parameters, including "Typicals" must be validated for 
+each customer application by the customer's technical experts. 
+
+Samsung products are not designed, intended, or authorized for 
+use as components in systems intended for surgical implant into the body, 
+for other applications intended to support or sustain life, or for 
+any other application in which the failure of the Samsung product 
+could create a situation where personal injury or death may occur.
+
+Should the Buyer purchase or use a Samsung product for any such 
+unintended or unauthorized application, the Buyer shall indemnify and 
+hold Samsung and its officers, employees, subsidiaries, affiliates, and 
+distributors harmless against all claims, costs, damages, expenses, and 
+reasonable attorney fees arising out of, either directly or indirectly, 
+any claim of personal injury or death that may be associated with such 
+unintended or unauthorized use, even if such claim alleges that 
+Samsung was negligent regarding the design or manufacture of said product
+
+Copyright (c) 2007-2008 Samsung Electronics Co.,Ltd. 
+All rights reserved. No part of this publication may be reproduced, 
+stored in a retrieval system, or transmitted in any form or by any means, 
+electric or mechanical, by photocopying, recording, or otherwise, without 
+the prior written consent of Samsung Electronics Co.,Ltd.
+
+Samsung Electronics Co., Ltd.
+San #24 Nongseo-Dong, Giheung-Gu
+Yongin-City Gyeonggi-Do, Korea
+446-711
+
+Home Page: http://www.samsungsemi.com/
+E-Mail: mobilesol.cs@samsung.com
+
+Printed in the Republic of Korea
+
+
+==================================================================
+* Basic Information
+==================================================================
+U-Boot Version:	1.1.6
+Base U-Boot:	1.1.6 from denx.de
+Package Name:	s3c-u-boot-1.1.6
+Latest Release:	rel-4-3-7 (2008-10-22)
+Latest Tarball:	s3c-u-boot-1.1.6_rel-4-3-7_081022.tar.bz2
+
+
+==================================================================
+* Revision History
+==================================================================
+Rev		Date		Description of Change
+---------	----------	----------------------------------
+rel-4-3-6	2008-10-15	SD/SDHC boot support
+rel-4-3-7	2008-10-22	Single binary iROM boot support
+
+
+==================================================================
+* rel-4-3-7
+==================================================================
+* What's New?
+	- A single binary boot support with iROM (6410/3x)
+
+* Fixes made in this update
+	- 
+
+* Known Issues
+	- 
+
+==================================================================
+* rel-4-3-6
+==================================================================
+* What's New?
+	- SD/SDHC boot support (2450/2416/6410/643x)
+
+* Fixes made in this update
+	- 
+
+* Known Issues
+	- Some SD/SDHC cards are not able to boot up

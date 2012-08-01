@@ -1,0 +1,990 @@
+dev-0-0-0 : scsuh
+	u-boot 1.1.6 is newly checked in. base platform is smdk2443. smdk2440(2442), smdk2412 are alos ported.
+
+dev-0-0-1 : Kim, Yong-Hun
+	Support MMC initialzation and reading.
+	FILE : 
+		cpu/s3c24xx/mmc.[ch]
+		cpu/s3c24xx/Makefile
+		include/s3c2412.h
+		include/s3c2443.h
+		include/configs/smdk2412.h
+
+dev-0-0-2 : Kim, Yong-Hun
+	Support SD, MMC plus initialzation and reading.
+	FILE :
+		cpu/s3c24xx/mmc.c
+		cpu/s3c24xx/mmc.h
+		include/s3c2443.h
+
+dev-0-0-3 : Kim, Yong-Hun
+	Support DDR, 16bits SDRAM.
+	FILE :
+		board/samsung/smdk2412/lowlevel_init.S
+		board/samsung/smdk2412/smdk2412.c
+		cpu/s3c24xx/s3c2412/cpu_init.S
+		include/configs/smdk2412.h
+
+	Usage : Modify include/configs/smdk2412.h:233 to use 16bits SDRAM.
+
+dev-0-0-4 : Kim, Yong-Hun
+	Modify memory bank confiuration value for DDR(64MB)
+	FILE :
+		include/configs/smdk2412.h
+		lib_arm/board.c
+
+dev-0-0-5 :  Jinsung, Yang
+	Added support Trace32 Burning
+	FILE :
+		common/cmd_nand.c
+
+dev-0-0-6 : Kim, Yong-Hun
+	Compare INFORM2 register to confirm the dram type from sleep-wakeup
+	FILE :
+		cpu/s3c24xx/s3c2412/cpu_init.S
+
+dev-0-0-7 : Kim, Yong-Hun
+	Bug patch onenand initialization and add onenand command.
+	FILE :
+		board/samsung/smdk2412/smdk2412.c
+		common/Makefile
+		common/cmd_onenand.c
+		cpu/s3c24xx/onenand.c
+		include/onenand.h
+		include/configs/smdk2412.h
+
+dev-0-0-8 : Yang, Jinsung
+	Added H/W ECC support
+	FILE :
+		cpu/s3c24xx/nand.c
+		drivers/nand/nand_base.c
+		include/s3c2412.h
+		include/s3c2440.h
+		include/s3c2443.h
+
+dev-0-0-9 : Kim, Yong-Hun
+	Modify GPIO F port value for onenand, MAX1718 & LED, GPF0~2.
+	FILE :
+		board/samsung/smdk2412/lowlevel_init.S
+		board/samsung/smdk2412/smdk2412.c
+
+dev-0-0-10 : Yang, Jinsung
+	Added mDiracIII support
+
+	FILE :
+		Makefile
+		board/samsung/smdk6400/config.mk
+		board/samsung/smdk6400/lowlevel_init.S
+		board/samsung/smdk6400/smdk6400.c
+		board/samsung/smdk6400/u-boot.lds
+		cpu/s3c64xx/Makefile
+		cpu/s3c64xx/cpu.c
+		cpu/s3c64xx/i2c.c
+		cpu/s3c64xx/onenand.c
+		cpu/s3c64xx/start.S
+		include/configs/smdk6400.h
+
+dev-0-0-11: Yang, Jinsung
+	Fixed warnings
+
+	FILE :
+		cpu/s3c24xx/nand.c
+
+dev-0-0-12: Yang, Jinsung
+	Missed commit (NAND_ECC_NONE)
+
+	FILE : 
+		cpu/s3c24xx/nand.c
+
+dev-0-0-13: Kim, Yong-Hun
+	Modify start code for S3C2412 PM(max1718 setting)
+	FILE : 
+		board/samsung/smdk2412/lowlevel_init.S
+
+dev-0-0-14: Kim, Yong-Hun
+	Support writing function for MMC.
+	FILE :
+		Changelog_Samsung
+		common/cmd_mmc.c
+		cpu/s3c24xx/mmc.c
+		cpu/s3c24xx/mmc.h
+		include/s3c2412.h
+
+dev-0-0-15: Lee,Byungjae
+	Support USB download for S3C2412/2443 (only DNW v1.0)
+	FILES :
+		M common/Makefile
+		M cpu/s3c24xx/Makefile
+		M include/s3c2412.h
+		M include/s3c2443.h
+		M include/configs/smdk2412.h
+		M include/configs/smdk2443.h
+		A common/cmd_usbd.c
+		A cpu/s3c24xx/usbd-ctl-fs.c
+		A cpu/s3c24xx/usbd-ctl-hs.c
+		A cpu/s3c24xx/usbd-ep0-fs.c
+		A cpu/s3c24xx/usbd-fs.h
+		A cpu/s3c24xx/usbd-hs.h
+		A cpu/s3c24xx/usbd-recv-fs.c
+		A cpu/s3c24xx/usbd-send-fs.c
+		R include/s3c24x0_usb.h
+
+dev-0-0-16: Jinsung, Yang
+	New NAND drivers applied
+
+	FILE :
+		M common/cmd_nand.c
+		M common/cmd_onenand.c
+		M cpu/s3c24xx/nand.c
+		M drivers/nand/nand_base.c
+		M drivers/nand/nand_bbt.c
+		M drivers/nand/nand_ecc.c
+		M drivers/nand/nand_ids.c
+		M drivers/nand/nand_util.c
+		M drivers/onenand/generic.c
+		M drivers/onenand/onenand.c
+		M drivers/onenand/onenand_base.c
+		M drivers/onenand/onenand_bbt.c
+		M include/onenand.h
+		M include/linux/mtd/compat.h
+		M include/linux/mtd/doc2000.h
+		M include/linux/mtd/mtd-abi.h
+		M include/linux/mtd/mtd.h
+		M include/linux/mtd/nand.h
+		M include/linux/mtd/nand_ecc.h
+		M include/linux/mtd/nftl.h
+		M include/linux/mtd/onenand.h
+		M include/linux/mtd/onenand_regs.h
+		M lib_arm/board.c
+
+rel-1-0-0: Jinsung, Yang
+	Official Release (2007/02/14)
+
+dev-1-0-0: Jinsung, Yang
+	New starting tag
+
+dev-1-0-1: Jinsung, Yang
+	Fixed bugs for tabla
+	
+	Modified Files:
+		M board/samsung/tabla/tabla.c
+		M drivers/onenand/onenand_base.c
+		M drivers/onenand/onenand_bbt.c
+		M include/configs/tabla.h
+
+dev-1-0-2: Jinsung, Yang
+	Many nand flash related warnings removed.
+
+	Modified Files:
+		M board/samsung/smdk2443/smdk2443.c
+		M common/cmd_nand.c
+		M common/cmd_onenand.c
+		M cpu/s3c24xx/nand.c
+		M drivers/nand/nand_base.c
+		M drivers/nand/nand_ecc.c
+		M drivers/nand/nand_util.c
+		M drivers/onenand/onenand_base.c
+		M include/linux/mtd/bbm.h
+		M include/linux/mtd/mtd.h
+		M include/linux/mtd/nand.h
+
+dev-1-0-3: Jinsung, Yang
+	1 Bit H/W ECC(SLC Small/Large NAND) codes modified.
+	4 Bit H/W ECC(MLC NAND) developing codes inserted. (Disabled)
+
+	Modified Files:
+		M cpu/s3c24xx/nand.c
+		M drivers/nand/nand_base.c
+		M include/s3c2412.h
+		M include/s3c2443.h
+		M include/linux/mtd/nand.h
+
+dev-1-0-4: Kim, Yong-Hun
+	Add support for Samsung SMDK6400 board(not completed)
+
+	Modified Files:
+		Makefile
+		board/samsung/smdk6400/config.mk
+		board/samsung/smdk6400/lowlevel_init.S
+		board/samsung/smdk6400/smdk6400.c
+		board/samsung/smdk6400/smdk6400_val.h
+		board/samsung/smdk6400/u-boot.lds
+		cpu/s3c24xx/s3c2443/speed.c
+		cpu/s3c64xx/Makefile
+		cpu/s3c64xx/cpu.c
+		cpu/s3c64xx/interrupts.c
+		cpu/s3c64xx/nand.c
+		cpu/s3c64xx/nand_cp.c
+		cpu/s3c64xx/serial.c
+		cpu/s3c64xx/start.S
+		cpu/s3c64xx/s3c6400/Makefile(NEW)
+		cpu/s3c64xx/s3c6400/cpu_init.S(NEW)
+		cpu/s3c64xx/s3c6400/speed.c(NEW)
+		drivers/cs8900.c
+		drivers/cs8900.h
+		include/s3c6400.h(NEW)
+		include/configs/smdk6400.h
+
+dev-1-0-5: Kim, Yong-Hun
+	Support NAND boot of SMDK6400 board
+
+	Modified Files:
+		board/samsung/smdk6400/lowlevel_init.S
+		board/samsung/smdk6400/smdk6400.c
+		cpu/s3c64xx/nand_cp.c
+		cpu/s3c64xx/start.S
+		cpu/s3c64xx/s3c6400/cpu_init.S
+		include/s3c6400.h
+		include/configs/smdk6400.h
+
+dev-1-0-6: Jinsung Yang
+	- Added MLC developing codes (not stable)
+
+	Modified files:
+		common/cmd_nand.c
+		cpu/s3c24xx/nand.c
+		cpu/s3c64xx/nand.c
+		drivers/nand/nand_base.c
+		drivers/onenand/onenand_base.c
+		include/linux/mtd/nand.h
+
+dev-1-0-7: Jinsung Yang
+	- MLC basic functions are available. (not stable)
+	- Implemented functions are:
+		* Idenfitication
+		* Erase
+		* Write with 4 bit h/w ecc
+		* Read with 4 bit h/w ecc
+	- Tested with K9G8G08UM
+
+	Modified files:
+		M cpu/s3c24xx/nand.c
+		M cpu/s3c64xx/nand.c
+		M drivers/nand/nand_base.c
+		M include/s3c2412.h
+		M include/s3c2443.h
+		M include/s3c6400.h
+
+dev-1-0-8: Jinsung Yang
+	- Modified s3c_nand_correct_data() to treat 'Free Page'
+
+	Modified files:
+		M cpu/s3c24xx/nand.c
+		M cpu/s3c64xx/nand.c
+		M drivers/nand/nand_base.c
+		M include/s3c2412.h
+		M include/s3c2443.h
+		M include/s3c6400.h
+		M include/linux/mtd/nand.h
+
+dev-1-0-9: Kim, Yong-Hun
+	Support 533/133/33MHz and 667/133/33MHz for SMDK6400
+	(Defualt mode: 533/133/33Mhz SYNC Mode)
+
+	Modified files:
+		board/samsung/smdk6400/lowlevel_init.S
+		cpu/s3c64xx/s3c6400/speed.c
+		include/configs/smdk6400.h
+
+dev-1-0-10: Kim, Yong-Hun
+	Bug patch for SYNC Mode and display SYNC/ASYNC mode.
+
+	Modified files:
+		board/samsung/smdk6400/lowlevel_init.S
+		cpu/s3c64xx/s3c6400/speed.c
+		include/configs/smdk6400.h
+
+dev-1-0-11: Jinsung Yang
+	- Modified nand flash driver to erase block without bad check
+
+	Modified files:
+		M drivers/nand/nand_base.c
+		M drivers/nand/nand_util.c
+
+rel-2-0-0: Jinsung Yang
+	- Official Release (S3C6400 Alpha)
+
+dev-2-0-0: Jinsung Yang
+
+dev-2-0-1: Lee,Byungjae
+	- Support USB OTG download for s3c6400 on DNW
+
+		A cpu/s3c64xx/usbd-otg-hs.c
+		A cpu/s3c64xx/usbd-otg-hs.h
+		M common/cmd_usbd.c
+		M cpu/s3c64xx/Makefile
+		M include/s3c6400.h
+		M include/configs/smdk6400.h
+
+dev-2-0-2: Jinsung Yang
+	- Support MLC working with JFFS2
+	- Only tested by K9G8G08UM
+
+	Modified files:
+		M common/cmd_nand.c
+		M cpu/s3c24xx/nand.c
+		M drivers/nand/nand_util.c
+
+dev-2-0-3: Jinsung Yang
+	- Added support S3C NAND (included MLC) working with YAFFS2
+	- Nand utility functions modified to work appropriately.
+
+	Modified files:
+		M cpu/s3c24xx/nand.c
+		M cpu/s3c64xx/nand.c
+		M drivers/nand/nand_util.c
+
+dev-2-0-4: Jinsung Yang
+	- Modified to fix bug in nand_util.c
+
+	Modified files:
+		M drivers/nand/nand_util.c
+
+rel-2-1-0: Jinsung Yang
+	- Official Release
+
+dev-2-1-0: Jinsnug Yang
+
+dev-2-1-1: Jinsung Yang
+	- Fixed JFFS2 bug
+
+	Modified files:
+		M cpu/s3c24xx/nand.c
+		M cpu/s3c64xx/nand.c
+		M drivers/nand/nand_util.c
+
+dev-2-1-2: Jinsung Yang
+	- Changed MLC spare assignment for YAFFS2 support
+	- Add support progress display while nand write
+
+	Modifed files:
+		M cpu/s3c24xx/nand.c
+		M cpu/s3c64xx/nand.c
+		M drivers/nand/nand_base.c
+
+rel-2-2-0: Jinsung Yang
+	- Official Release (07/05/22)
+
+dev-2-2-0: Jinsung Yang
+
+dev-2-2-1: Jinsung Yang
+	- Support 400/133/33 System Clock (ASYNC Mode Only)
+
+	Modified files:
+		M board/samsung/smdk6400/lowlevel_init.S
+		M include/configs/smdk6400.h
+
+dev-2-2-2: Jinsung Yang
+	- SMDK6400 EVT1 movinand booting support (1st dev step: in use only)
+
+	Added files:
+		A common/cmd_movi.c
+		A common/env_movi.c
+		A cpu/s3c64xx/hs_mmc.c
+		A cpu/s3c64xx/hs_mmc.h
+		A cpu/s3c64xx/movi.c
+		A include/movi.h
+
+	Modified files:
+		M board/samsung/smdk6400/u-boot.lds
+		M common/Makefile
+		M common/cmd_nvedit.c
+		M cpu/s3c64xx/Makefile
+		M cpu/s3c64xx/start.S
+		M include/cmd_confdefs.h
+		M include/s3c6400.h
+		M include/configs/smdk6400.h
+		M lib_arm/board.c
+
+dev-2-2-3: Jinsung Yang
+	- movinand booting support (2nd dev step: in use only)
+	- transcend mmc plus 2GB via hs-mmc channel 1 is only working
+
+	Modified files:
+		M common/cmd_movi.c
+		M common/env_common.c
+		M common/env_movi.c
+		M cpu/s3c64xx/hs_mmc.c
+		M include/movi.h
+		M lib_arm/board.c
+
+dev-2-2-4: Jinsung Yang
+	- movinand booting support (3rd dev step: in use only)
+	- mmc plus and movinand are also working fine.
+	- modified gpio setting to use as root file system device
+	- nand chip can be detected while movinand booting
+	- a lot of functions of cmd_movi.c was moved to movi.c
+
+	Modified files:
+		M board/samsung/smdk6400/smdk6400.c
+		M common/cmd_movi.c
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c64xx/movi.c
+		M include/movi.h
+		M include/configs/smdk6400.h
+		M lib_arm/board.c
+		M cpu/s3c64xx/s3c6400/cpu_init.S
+
+dev-2-2-5: Jinsung Yang
+	- Added to support OneNAND for smdk6400
+
+	Added files:
+		A common/env_onenand.c
+		A drivers/onenand/s3c_onenand.c
+		A include/s3c_onenand.h
+		A include/linux/mtd/s3c_onenand.h
+
+	Modified files:
+		M board/samsung/smdk6400/lowlevel_init.S
+		M board/samsung/smdk6400/smdk6400.c
+		M common/Makefile
+		M common/cmd_movi.c
+		M common/cmd_onenand.c
+		M common/console.c
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c64xx/movi.c
+		M cpu/s3c64xx/onenand.c
+		M cpu/s3c64xx/onenand_cp.c
+		M cpu/s3c64xx/start.S
+		M cpu/s3c64xx/s3c6400/speed.c
+		M drivers/cs8900.c
+		M drivers/onenand/Makefile
+		M drivers/onenand/onenand.c
+		M include/movi.h
+		M include/s3c6400.h
+		M include/configs/smdk6400.h
+		M lib_arm/board.c
+
+dev-2-2-6: Jinsung Yang
+	- Modified to make stable OneNAND support for smdk6400
+	- Added support onenand dump(.oob), onenand woob command
+
+	Modified files:
+		M common/cmd_onenand.c
+		M cpu/s3c64xx/onenand.c
+		M cpu/s3c64xx/start.S
+		M drivers/onenand/Makefile
+		M drivers/onenand/s3c_onenand.c
+		M include/linux/mtd/mtd.h
+		M include/linux/mtd/s3c_onenand.h
+
+dev-2-2-7: Jinsung Yang
+	- Modified to make stable OneNAND support for smdk6400
+	- read function re-structured
+
+	Modified files:
+		M drivers/onenand/s3c_onenand.c
+		M include/s3c6400.h
+
+rel-2-3-0: Jinsung Yang
+	- Official Release: iROM-MMC Boot Support (07.10.05)
+
+dev-2-3-0: Jinsung Yang
+
+dev-2-3-1: Jinsung Yang
+	- Added functions for OneNAND jffs2 file system
+	- Added functions for OneNAND bad block scheme
+
+	Modified files:
+		common/cmd_onenand.c
+		drivers/onenand/s3c_onenand.c
+
+dev-2-3-2: Jinsung Yang
+	- Fixed bug for smdk2443 boot up
+
+	Modified files:
+		include/configs/smdk2443.h
+		lib_arm/board.c
+
+rel-2-3-1: Jinsung Yang
+	- Official Release (07.12.17)
+
+dev-2-3-3: Jinsung Yang
+	- EABI patch applied for smdk6400
+
+	Added files:
+		A include/div64.h
+		A lib_generic/div64.c
+
+	Modified files:
+		M Makefile
+		M board/samsung/smdk6400/u-boot.lds
+		M cpu/s3c64xx/config.mk
+		M drivers/nand/nand_util.c
+		M lib_generic/Makefile
+
+rel-2-3-2: Jinsung Yang
+	- Official Release (07.12.17)
+
+dev-2-3-4: Jinsung Yang
+	- SMDK2442B support
+
+	Added files:
+		M Makefile
+		M board/samsung/smdk2440/lowlevel_init.S
+		M board/samsung/smdk2440/smdk2440_val.h
+		A board/samsung/smdk2442/Makefile
+		A board/samsung/smdk2442/config.mk
+		A board/samsung/smdk2442/flash.c
+		A board/samsung/smdk2442/lowlevel_init.S
+		A board/samsung/smdk2442/smdk2442.c
+		A board/samsung/smdk2442/smdk2442_val.h
+		A board/samsung/smdk2442/u-boot.lds
+		A cpu/s3c24xx/s3c2442/Makefile
+		A cpu/s3c24xx/s3c2442/config.mk
+		A cpu/s3c24xx/s3c2442/cpu_init.S
+		A cpu/s3c24xx/s3c2442/speed.c
+		A include/s3c2442.h
+	
+	Modified files:
+		M include/configs/smdk2442.h
+
+dev-2-3-5: Jinsung Yang
+	- USB Download (dnw) support for smdk2442
+
+	Modified files:
+		M common/cmd_usbd.c
+		M cpu/s3c24xx/usbd-ctl-fs.c
+		M cpu/s3c24xx/usbd-ep0-fs.c
+		M cpu/s3c24xx/usbd-recv-fs.c
+		M cpu/s3c24xx/usbd-send-fs.c
+		M include/s3c2442.h
+		M include/configs/smdk2442.h
+
+dev-2-3-6: Jinsung Yang
+	- S3C6410/SMDK6410 support
+
+	Added files:
+		A board/samsung/smdk6410/Makefile
+		A board/samsung/smdk6410/config.mk
+		A board/samsung/smdk6410/flash.c
+		A board/samsung/smdk6410/lowlevel_init.S
+		A board/samsung/smdk6410/smdk6410.c
+		A board/samsung/smdk6410/smdk6410_val.h
+		A board/samsung/smdk6410/u-boot.lds
+		A cpu/s3c64xx/s3c6410/Makefile
+		A cpu/s3c64xx/s3c6410/cpu_init.S
+		A cpu/s3c64xx/s3c6410/speed.c
+		A include/s3c6410.h
+		A include/configs/smdk6410.h
+
+	Modified files:
+		M Makefile
+		M board/samsung/smdk6400/lowlevel_init.S
+		M common/cmd_onenand.c
+		M common/cmd_usbd.c
+		M cpu/s3c64xx/cpu.c
+		M cpu/s3c64xx/usbd-otg-hs.c
+		M include/configs/smdk6400.h
+dev-2-3-7: ByungJae Lee
+	- Modified PMS value for s3c6410
+
+	Modified files:
+		M include/configs/smdk6410.h
+
+dev-2-3-8: ByungJae Lee
+	- fixed bug PMS value for s3c6410
+	  Spports one CKE contrl set at Memory Configuration Reg.(P1MEMCFG)
+
+	Modified files:
+		M board/samsung/smdk6410/lowlevel_init.S
+		M include/configs/smdk6410.h
+
+dev-2-3-9: Jongpill Lee
+	- Change uart clock source PCLK to CLKUART
+
+	Modified files:
+		M board/samsung/smdk6400/lowlevel_init.S
+
+rel-3-0-0: Jongpill Lee
+	- Official Release(2008.03.11)
+
+dev-3-0-0: Jongpill Lee
+
+dev-3-0-1: Jongpill Lee
+	- Support SMDK2450
+
+	Modified Files:
+		M Makefile
+		M cpu/s3c24xx/usbd-ctl-hs.c
+	
+	Added Files:
+		A board/samsung/smdk2450
+		A cpu/s3c24xx/s3c2450
+		A include/s3c2450.h
+		A include/configs/smdk2450.h
+
+dev-3-0-2: Jongpill Lee
+	- Serial buf fixed and Support UART CLKUART & PCLK
+
+	Modified Files:
+
+		M board/samsung/smdk6400/lowlevel_init.S
+		M common/env_nand.c
+		M cpu/s3c24xx/cpu.c
+		M cpu/s3c24xx/serial.c
+		M include/configs/smdk6400.h
+		M include/configs/smdk6410.h
+		M lib_arm/board.c
+
+dev-3-0-3: Jongpill Lee
+	- Modified for SMDK2450
+
+	Modified Files:
+
+		M board/samsung/smdk2450/lowlevel_init.S
+		M cpu/s3c24xx/s3c2450/speed.c
+		M include/configs/smdk2450.h
+
+dev-3-0-4: Jongpill Lee
+	- Support 534MHz for ARM Clock
+
+	Modified Files:
+
+		M include/configs/smdk2450.h
+dev-3-0-5: ByungJae Lee
+	- Modifoed clock setting for s3c6410
+		M include/configs/smdk6410.h
+
+dev-3-0-6: Jongpill Lee
+	- UART Clock change PCLK to CLKUART
+	
+	Modified Files:
+
+		M board/samsung/smdk6410/lowlevel_init.S
+		M cpu/s3c64xx/s3c6410/cpu_init.S
+		M include/configs/smdk6400.h 	
+dev-3-0-7: ByungJae Lee
+	- UART Clock change PCLK to CLKUART for s3c6410
+		M include/configs/smdk6410.h 
+
+dev-3-0-8: Jongpill Lee
+	- PCLK Value Modify for SMDK2450
+
+	Modified Files:
+
+		M include/configs/smdk2450.h
+		M board/samsung/smdk2450/lowlevel_init.S
+
+dev-3-0-9: Jongpill Lee
+	- Support DDR2 on SMDK2450
+
+	Modified Files:
+
+		M board/samsung/smdk2450/lowlevel_init.S
+		M board/samsung/smdk2450/smdk2450.c
+		M cpu/s3c24xx/s3c2450/cpu_init.S
+		M include/configs/smdk2450.h
+
+rel-4-0-0: Jongpill Lee
+	- Official Release (2008.03.28) 
+
+dev-4-0-0: Jongpill Lee
+
+dev-4-0-1: Jinsung Yang
+	- Support flash based bbt
+
+dev-4-0-2: Jongpill Lee
+	- Support SMDK2416
+
+rel-4-0-1: Jinsung Yang
+	- Official Release (08.04.02)
+
+dev-4-0-3: Jinsung Yang
+	- OneNAND support
+
+rel-4-1-0: Jinsung Yang
+	- Official Release (08.04.04)
+
+dev-4-1-0: Jinsung Yang
+
+dev-4-1-1: Bug Fixed On SMDK2443
+	Modified Files:
+
+		M cpu/s3c24xx/s3c2443/speed.c
+		M cpu/s3c24xx/s3c2443/cpu_init.S
+
+dev-4-1-2: Temporary Support iROM on SMDK2450
+	Modified Files:
+
+		M board/samsung/smdk2450/lowlevel_init.S
+		M cpu/s3c24xx/nand_cp.c
+		M cpu/s3c24xx/start.S
+		M include/configs/smdk2450.h
+dev-4-1-3: Temporary Support iROM on SMDK2450(commit movi.h)
+	Modified Files:
+		
+		M include/movi.h
+
+dev-4-1-4: iROM Booting with movinand on SMDK2450
+	Modified Files:
+
+		M board/samsung/smdk2450/lowlevel_init.S
+		M cpu/s3c24xx/movi.c
+		M cpu/s3c64xx/movi.c
+		M include/configs/smdk2450.h
+
+dev-4-1-5: Support Saveenv Command for Large Block on SMDK2416
+	Modifide Files:
+		
+		M include/configs/smdk2416.h
+
+dev-4-1-6: Support Autoboot for movinand on smdk2450
+	Modified Files:
+
+		M lib_arm/board.c
+
+dev-4-1-7: ByungJae Lee
+	- support usb download(dnw) for s3c2450/16
+
+	Modified File:
+		M cpu/s3c24xx/usbd-ctl-hs.c
+
+dev-4-1-8: Jongpill Lee
+	-Support iROM booting on SMDK2416
+
+	Modified Files:
+		M board/samsung/smdk2416/lowlevel_init.S
+		M board/samsung/smdk2416/smdk2416.c
+		M board/samsung/smdk2416/u-boot.lds
+		M cpu/s3c24xx/hs_mmc.c
+		M cpu/s3c24xx/movi.c
+		M cpu/s3c24xx/start.S
+		M include/movi.h
+		M include/s3c2416.h
+		M include/configs/smdk2416.h
+		M lib_arm/board.c
+
+rel-4-2-0: Jongpill Lee
+	-Official Release('08.04.29)
+
+dev-4-2-0: Jongpill Lee
+
+dev-4-2-1: Jongpill Lee
+	- Bug Fixed(CPU Configuration)
+
+	MOdified Files:
+		M include/s3c2450.h
+
+dev-4-2-2: Ryu Euiyoul
+	- Support SMSC 9115 Ethernet
+
+	Modified File:
+		M drivers/Makefile
+	Added Files:
+		A drivers/smc911x.c
+		A drivers/smc911x.h
+
+dev-4-2-3: Byungjae Lee
+	- Change EPLL out clock 30MHz to 96MHz
+	- Modified File:
+		include/configs/smdk2416.h
+		include/configs/smdk2450.h
+
+dev-4-2-4: Ilho Lee
+	- YAFFS2 support for oneNAND added
+	- Modified File:
+		common/cmd_onenand.c
+		drivers/onenand.c
+
+rel-4-2-1: Jongpill Lee
+	- Official Release for SSPTS(08.05.19)
+
+rel-4-3-0: Jongpill Lee
+	- Official Release(08.05.30)
+
+dev-4-3-0: Jongpill Lee
+
+dev-4-3-1: Jongpill Lee
+	- Support ARM Clk 267Mhz on smdk2450 and smdk2416
+
+	Modified Files:
+
+		M include/configs/smdk2416.h
+		M include/configs/smdk2450.h
+
+dev-4-3-2:Jongpill Lee
+	- Fixed ARM clk on smdk2450 and smdk2416
+
+	Modified Files:
+
+		M include/configs/smdk2416.h
+		M include/configs/smdk2450.h
+
+dev-4-3-3: Jongpill Lee
+	- Support S3C6430
+
+	Added Files:
+
+		A board/samsung/smdk6430/Makefile
+		A board/samsung/smdk6430/config.mk
+		A board/samsung/smdk6430/flash.c
+		A board/samsung/smdk6430/lowlevel_init.S
+		A board/samsung/smdk6430/smdk6430.c
+		A board/samsung/smdk6430/smdk6430_val.h
+		A board/samsung/smdk6430/u-boot.lds
+		A cpu/s3c64xx/s3c6430/Makefile
+		A cpu/s3c64xx/s3c6430/cpu_init.S
+		A cpu/s3c64xx/s3c6430/speed.c
+		A include/s3c6430.h
+		A include/configs/smdk6430.h
+
+	Modified Files:
+
+		M Makefile
+		M common/cmd_usbd.c
+		M cpu/s3c64xx/cpu.c
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c64xx/movi.c
+		M cpu/s3c64xx/onenand.c
+		M cpu/s3c64xx/start.S
+		M cpu/s3c64xx/usbd-otg-hs.c
+		M include/movi.h
+		M include/configs/smdk6410.h
+		M lib_arm/board.c
+
+rel-4-3-1: Jongpill Lee
+	- Official release(08.08.11)
+
+dev-4-3-4: Jinsung Yang
+	- 1 Bit H/W ECC bug fix
+	- Spare ECC support
+
+rel-4-3-2: Kyoungil Kim
+	- Official release(08.09.17)
+
+dev-4-3-5: Kyoungil Kim
+	- Modified booting message SMDK6430 to SMDK643X
+
+	Modified Files:
+
+		M board/samsung/smdk6430/smdk6430.c
+		M cpu/s3c64xx/s3c6430/speed.c
+		M include/configs/smdk6430.h
+
+dev-4-3-6: Jinsung Yang
+	- 1 bit h/w ecc bug fix for 24xx small block nand
+
+dev-4-3-7: Jinsung Yang
+	- movinand commands changed
+
+rel-4-3-3: Jinsung Yang
+	- Official Release (08.10.07)
+
+dev-4-3-8: Kyoungil Kim
+	- Support UART 1, 2, 3 Channel for SMDK6410 
+
+	Modified Files:
+		M board/samsung/smdk6410/lowlevel_init.S
+		M cpu/s3c64xx/serial.c
+		M include/s3c6400.h
+		M include/s3c6410.h
+
+dev-4-3-9: Jinsung Yang
+	- Changes for moviNAND boot
+
+rel-4-3-4: Jongpill Lee
+	- Official Release (08.10.13)
+
+dev-4-3-10: Jinsung Yang
+	- SD/SDHC boot support
+
+	Modified files:
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c24xx/hs_mmc.c
+
+rel-4-3-5: Jinsung Yang
+	- Official Release (08.10.15)
+
+rel-4-3-6: Jinsung Yang
+	- Official Release (08.10.15)
+
+dev-4-3-11: Jinsung Yang
+	- supports for a single binary boot with iROM devices for smdk6410/30
+
+	Added files:
+		A common/env_auto.c
+		A cpu/s3c64xx/start_6400.S
+		A cpu/s3c64xx/start_irom.S
+
+	Modified files:
+		M board/samsung/smdk6400/u-boot.lds
+		M board/samsung/smdk6410/u-boot.lds
+		M board/samsung/smdk6430/u-boot.lds
+		M common/Makefile
+		M common/cmd_movi.c
+		M common/cmd_nvedit.c
+		M common/env_common.c
+		M common/env_nand.c
+		M cpu/s3c64xx/Makefile
+		M cpu/s3c64xx/movi.c
+		M cpu/s3c64xx/nand.c
+		M cpu/s3c64xx/nand_cp.c
+		M cpu/s3c64xx/onenand.c
+		M cpu/s3c64xx/onenand_cp.c
+		M cpu/s3c64xx/start.S
+		M drivers/nand/nand_base.c
+		M drivers/onenand/onenand.c
+		M drivers/onenand/s3c_onenand.c
+		M include/movi.h
+		M include/configs/smdk6400.h
+		M include/configs/smdk6410.h
+		M include/configs/smdk6430.h
+		M lib_arm/board.c
+
+dev-4-3-12: Jinsung Yang
+	- Added support new command 'insnand' to fuse u-boot into NAND from
+	SD/MMC
+
+rel-4-3-7: Jinsung Yang
+	- Official Release (08.10.22)
+
+rel-4-3-8: Jinsung Yang
+	- Official Release (08.11.04)
+
+dev-4-3-13: Jinsung Yang
+	- Patch for movinand bulk rw
+
+	Modified files:
+		M common/cmd_movi.c
+		M include/movi.h
+
+dev-4-3-14: Jinsung Yang
+	- (Temporary) patch for u-boot.bin size overflow
+
+	Modified files:
+		M include/configs/smdk6410.h
+		M include/configs/smdk6430.h
+
+dev-4-3-15: Kyoungil Kim
+	- delete hardcoded CROSS_COMPILE
+	- support UART2
+
+	Modified files:
+		M Makefile
+		M board/samsung/smdk6430/lowlevel_init.S
+
+dev-4-3-16: Jinsung Yang
+	- HSMMC channel auto-detect support
+
+	Modified files:
+		M cpu/s3c24xx/hs_mmc.c
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c64xx/movi.c
+		M include/movi.h
+		M lib_arm/board.c
+
+dev-4-3-17: Kyoungil Kim
+	- support UART2, UART3
+
+	Modified files:
+		M include/s3c6430.h
+
+dev-4-3-18: Jinsung Yang
+	- fix for SD detect
+
+	Modified files:
+		M cpu/s3c64xx/hs_mmc.c
+		M cpu/s3c64xx/movi.c
+		M include/movi.h
+
