@@ -1089,7 +1089,7 @@ void movi_read (uint addr, uint start_blk, uint blknum)
 	set_cmd_register(cmd, 1, MMC_RSP_R1);
 
 	if (wait_for_cmd_done()) {
-		printf(("Command NOT Complete\n"));
+		dbg(("Command NOT Complete\n"));
 	} else
 		ClearCommandCompleteStatus();
 

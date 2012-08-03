@@ -16,7 +16,7 @@
  * Based strongly on code by:
  *
  * Author: Yong-iL Joh <tolkien@mizi.com>
- * Date  : $Date: 2006/10/09 10:29:08 $
+ * Date  : $Date: 2006/12/06 02:50:52 $
  *
  * Author:  Andrew Christian
  *          15 May 2002
@@ -99,11 +99,21 @@
 #else
 #define SD_SEND_RELATIVE_ADDR     3   /* bcr                     R6  */
 #endif
+#define SD_SEND_IF_COND           8   /* bcr  [11:0] See below   R7  */
 
   /* Application commands */
 #define SD_APP_SET_BUS_WIDTH      6   /* ac   [1:0] bus width    R1  */
+#define SD_APP_SEND_NUM_WR_BLKS  22   /* adtc                    R1  */
 #define SD_APP_OP_COND           41   /* bcr  [31:0] OCR         R3  */
 #define SD_APP_SEND_SCR          51   /* adtc                    R1  */
+
+/*
+ * SD_SEND_IF_COND argument format:
+ *
+ *	[31:12] Reserved (0)
+ *	[11:8] Host Voltage Supply Flags
+ *	[7:0] Check Pattern (0xAA)
+ */
 
 /*
   MMC status in R1

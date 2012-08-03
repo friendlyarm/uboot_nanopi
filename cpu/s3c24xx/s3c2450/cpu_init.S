@@ -158,7 +158,7 @@ sdr_ctrl_asm_init:
 	str	r3, [r4, #REFRESH_OFFSET]
 
 	/* Step 10: wait more than 120 clk */
-	mov	r3, #0x100
+	mov	r3, #0x200
 10:	subs	r3, r3, #1
 	bne	10b
 
@@ -182,8 +182,8 @@ sdr_ctrl_asm_init:
 	orr	r2, r1, #INIT_EMRS
 	str	r2, [r4, #BANKCON1_OFFSET]
 
-	/* Step 13: write 0x87 into the refresh timer */
-	mov	r3, #0x87
+	/* Step 13: write 0x400 into the refresh timer */
+	mov	r3, #0x400
 	str	r3, [r4, #REFRESH_OFFSET]
 
 	/* Step 14: Normal Mode */

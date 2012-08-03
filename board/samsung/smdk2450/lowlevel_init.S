@@ -53,6 +53,12 @@ lowlevel_init:
 	orr	r1, r2, #1
 	str	r1, [r0, #GPCDAT_OFFSET]
 
+	/* Turn pwm buzzer off by output GPB0 low */
+	mov	r1, #0x0
+	str	r1, [r0, #GPBDAT_OFFSET]
+	mov	r1, #0x0001
+	str	r1, [r0, #GPBCON_OFFSET]
+
 	/* Disable Watchdog */
 	ldr	r0, =ELFIN_WATCHDOG_BASE
 	mov	r1, #0
@@ -95,17 +101,23 @@ lowlevel_init:
 	ldr	r1, =0x4b4b4b4b
 	str	r1, [r0, #0x20]
 
+	/* hsmmc drive strength */
+	ldr	r7, =0x56000110
+	ldr	r8, [r7]
+	orr	r8, r8, #0x0c
+	str	r8, [r7]
+
 #ifdef CONFIG_PM
 	/* PM check */
 	@ Check if this is a wake-up from sleep
-        ldr     r0, =INFORM0_REG	/* INFORM0 register */
-        ldr     r1, [r0]
-        ldr     r2, =0x2BED
-        cmp     r2, r1
+	ldr	r0, =INFORM0_REG	/* INFORM0 register */
+	ldr	r1, [r0]
+	ldr	r2, =0x2BED
+	cmp	r2, r1
 
-	ldreq 	r0, =INFORM1_REG	/* INFORM1 register */
-        ldreq 	r1, [r0]
-        moveq 	pc, r1 			 /* end PM check */
+	ldreq	r0, =INFORM1_REG	/* INFORM1 register */
+	ldreq	r1, [r0]
+	moveq	pc, r1 			 /* end PM check */
 #endif
 
 	mov	pc, r12
@@ -124,6 +136,11 @@ system_clock_init:
 	ldr	r2, =CLK_DIV_VAL
 	orr	r1, r1, r2
 	str	r1, [r0, #CLKDIV0CON_OFFSET]
+
+	ldr	r1, [r0, #CLKDIV1CON_OFFSET]
+	bic	r1, r1, #(0x3<<6)
+	orr	r1, r1, #(0x1<<6)   /* HSMMCDIV_1 = 1 */
+	str	r1, [r0, #CLKDIV1CON_OFFSET]
 
 	/*Set MPLL Locktime*/
 	ldr	r1, =0xe10

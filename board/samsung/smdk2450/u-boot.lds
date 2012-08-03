@@ -32,6 +32,7 @@ SECTIONS
 	{
 	  cpu/s3c24xx/start.o	(.text)
 	  cpu/s3c24xx/s3c2450/cpu_init.o	(.text)
+	  board/samsung/smdk2450/lowlevel_init.o	(.text)
 	  cpu/s3c24xx/mmu_table.o	(.text)
 	  cpu/s3c24xx/onenand_cp.o	(.text)
 	  cpu/s3c24xx/nand_cp.o	(.text)

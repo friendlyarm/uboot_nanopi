@@ -127,7 +127,7 @@ ifeq ($(ARCH),ppc)
 CROSS_COMPILE = powerpc-linux-
 endif
 ifeq ($(ARCH),arm)
-CROSS_COMPILE = /usr/local/arm/4.2.2-eabi/usr/bin/arm-linux-
+CROSS_COMPILE = arm-linux-
 endif
 ifeq ($(ARCH),i386)
 ifeq ($(HOSTARCH),i386)
@@ -1949,6 +1949,9 @@ smdk2443_config	:	unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2443 samsung s3c2443
 
 smdk2450_config :       unconfig
+	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2450 samsung s3c2450
+
+mini2451_config :       unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2450 samsung s3c2450
 
 smdk2416_config :       unconfig	
