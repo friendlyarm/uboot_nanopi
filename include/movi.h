@@ -38,8 +38,8 @@
 #define MOVI_HIGH_CAPACITY	*((volatile unsigned int*)(TCM_BASE - 0x8))
 
 /* partition information */
-#define PART_SIZE_BL		(256 * 1024)
-#define PART_SIZE_KERNEL	(4 * 1024 * 1024)
+#define PART_SIZE_BL		(      256 * 1024)
+#define PART_SIZE_KERNEL	( 6 * 1024 * 1024)
 #define PART_SIZE_ROOTFS	(16 * 1024 * 1024)
 
 #define MOVI_LAST_BLKPOS	(MOVI_TOTAL_BLKCNT - (eFUSE_SIZE / MOVI_BLKSIZE))

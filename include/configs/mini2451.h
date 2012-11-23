@@ -72,7 +72,7 @@
 /*
  * Architecture magic and machine type
  */
-#define MACH_TYPE		1608
+#define MACH_TYPE		1685
 #define UBOOT_MAGIC		(0x43090000 | MACH_TYPE)
 
 /* Power Management is enabled */
@@ -158,12 +158,12 @@
 			CFG_CMD_DATE	| \
 			CFG_CMD_JFFS2	| \
 			CFG_CMD_PING	| \
+			CFG_CMD_BOOTD	| \
 			CFG_CMD_RUN	| \
 			CFG_CMD_MMC	| \
 			CFG_CMD_FAT	| \
 			CFG_CMD_ELF)	\
 			& ~(CFG_CMD_AUTOSCRIPT	| \
-				CFG_CMD_BOOTD	| \
 				CFG_CMD_IMI	| \
 				CFG_CMD_IMLS	| \
 				CFG_CMD_CONSOLE	| \
@@ -390,8 +390,8 @@
 
 /* Boot configuration (define only one of next) */
 //#define CONFIG_BOOT_NOR
-#define CONFIG_BOOT_NAND
-//#define CONFIG_BOOT_MOVINAND
+//#define CONFIG_BOOT_NAND
+#define CONFIG_BOOT_MOVINAND
 //#define CONFIG_BOOT_ONENAND
 
 #define CONFIG_NAND
