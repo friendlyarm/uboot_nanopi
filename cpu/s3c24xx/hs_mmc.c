@@ -361,7 +361,8 @@ static int issue_command (ushort cmd, uint arg, uint data, uint flags)
 		if (ocr_check == 1)
 			return 0;
 		else {
-			printf("Command = %d, Error Stat = 0x%04x\n", (s3c_hsmmc_readw(HM_CMDREG) >> 8), s3c_hsmmc_readw(HM_ERRINTSTS));
+			printf("Command = %d, Error Stat = 0x%04x\n",
+					(s3c_hsmmc_readw(HM_CMDREG) >> 8), s3c_hsmmc_readw(HM_ERRINTSTS));
 			return 0;
 		}
 	}
@@ -545,21 +546,23 @@ static int set_bus_width (uint width)
 	return 0;
 }
 
-static int set_sd_ocr (void)
+static int set_sd_ocr (u32 sdhc)
 {
 	uint i, ocr;
 
-	issue_command(MMC_APP_CMD, 0x0, 0, MMC_RSP_R1);
-	issue_command(SD_APP_OP_COND, 0x0, 0, MMC_RSP_R3);
-	ocr = s3c_hsmmc_readl(HM_RSPREG0);
-	dbg("ocr1: %08x\n", ocr);
+	ocr_check = 1;
+
+	ocr = 0x00ff0000 | (sdhc << 30);
 
 	for (i = 0; i < 100; i++) {
 		issue_command(MMC_APP_CMD, 0x0, 0, MMC_RSP_R1);
 		issue_command(SD_APP_OP_COND, ocr, 0, MMC_RSP_R3);
 
 		ocr = s3c_hsmmc_readl(HM_RSPREG0);
-		dbg("ocr2: %08x\n", ocr);
+		dbg("ocr: %08x\n", ocr);
+
+		movi_hc = ocr & (0x1 << 30);
+
 		if (ocr & (0x1 << 31)) {
 			dbg("Voltage range: ");
 			if (ocr & (1 << 21))
@@ -574,16 +577,19 @@ static int set_sd_ocr (void)
 			if (ocr & (1 << 7))
 				dbg(", 1.65V ~ 1.95V\n");
 			else
-				dbg('\n');
+				dbg("\n");
 
 			mmc_card = 0;
 			return 1;
 		}
+
 		udelay(1000);
 	}
 
 	// The current card is MMC card, then there's time out error, need to be cleared.
 	ClearErrInterruptStatus();
+	ocr_check = 0;
+
 	return 0;
 }
 
@@ -591,7 +597,9 @@ static int set_mmc_ocr (void)
 {
 	uint i, ocr;
 
-	for (i = 0; i < 100; i++) {
+	ocr_check = 1;
+
+	for (i = 0; i < 200; i++) {
 		issue_command(MMC_SEND_OP_COND, 0x40FF8000, 0, MMC_RSP_R3);
 
 		ocr = s3c_hsmmc_readl(HM_RSPREG0);
@@ -611,13 +619,15 @@ static int set_mmc_ocr (void)
 			if (ocr & (1 << 7))
 				dbg(", 1.65V ~ 1.95V\n");
 			else
-				dbg('\n');
+				dbg("\n");
 			return 1;
 		}
 	}
 
 	// The current card is SD card, then there's time out error, need to be cleared.
 	ClearErrInterruptStatus();
+	ocr_check = 0;
+
 	return 0;
 }
 
@@ -897,6 +907,44 @@ static void DataCompare_HSMMC (uint a0, uint a1, uint bytes)
 		dbg("\nData Compare Ok\n");
 }
 
+u32 identify_card_type(void)
+{
+	u32 temp;
+
+	/* Set MMC/SD/SDHC cards into idle state (card reset) */
+	issue_command(MMC_GO_IDLE_STATE, 0x00, 0, 0);
+
+	if (issue_command(8, 0x200001AA, 0 , MMC_RSP_R7)) {
+		/* SD Version 2.0 card Detected */
+		dbg("SD Card Version 2.0 detected\n");
+
+		/* Validate the response for the CMD8 command */
+		if ((s3c_hsmmc_readl(HM_RSPREG0) & 0x1FF) != 0x1AA) {
+			dbg("SD Card Version 2.0 is unstable. Card cannot be used\n");
+			return(0);
+		}
+
+		temp = set_sd_ocr(1);
+	} else {
+		ClearErrInterruptStatus();
+
+		/* Find out if the card is SD Ver 1.x Card of MMC card */
+		issue_command(MMC_APP_CMD, 0x0, 0, MMC_RSP_R1);
+		if (issue_command(SD_APP_OP_COND, 0x00FF0000, 0, MMC_RSP_R3)) {
+			/* SD Card Version 1.x Detected */
+			dbg("SD Card Version 1.x Detected\n");
+			temp = set_sd_ocr(0);
+		} else {
+			ClearErrInterruptStatus();
+			/* MMC Card Detected */
+			dbg("\n MMC Card Detected \n");
+			temp = set_mmc_ocr();
+		}
+	}
+
+	return (temp);
+}
+
 int hsmmc_init (void)
 {
 	u32 reg;
@@ -923,20 +971,8 @@ int hsmmc_init (void)
 	/* MMC_GO_IDLE_STATE */
 	issue_command(MMC_GO_IDLE_STATE, 0x00, 0, 0);
 
-	ocr_check = 1;
-
-	if (set_mmc_ocr()) {
-		mmc_card = 1;
-		dbg("MMC card is detected\n");
-	} else if (set_sd_ocr()) {
-		mmc_card = 0;
-		dbg("SD card is detected\n");
-	} else {
-		printf("0 MB\n");
+	if (!identify_card_type())
 		return 0;
-	}
-
-	ocr_check = 0;
 
 	/* Check the attached card and place the card
 	 * in the IDENT state rHM_RSPREG0
@@ -946,9 +982,13 @@ int hsmmc_init (void)
 	/* Manufacturer ID */
 	card_mid = (s3c_hsmmc_readl(HM_RSPREG3) >> 16) & 0xFF;
 
-	dbg("Product Name : %c%c%c%c%c%c\n", ((s3c_hsmmc_readl(HM_RSPREG2) >> 24) & 0xFF),
-	       ((s3c_hsmmc_readl(HM_RSPREG2) >> 16) & 0xFF), ((s3c_hsmmc_readl(HM_RSPREG2) >> 8) & 0xFF), (s3c_hsmmc_readl(HM_RSPREG2) & 0xFF),
-	       ((s3c_hsmmc_readl(HM_RSPREG1) >> 24) & 0xFF), ((s3c_hsmmc_readl(HM_RSPREG1) >> 16) & 0xFF));
+	dbg("Product Name : %c%c%c%c%c%c\n",
+			((s3c_hsmmc_readl(HM_RSPREG2) >> 24) & 0xFF),
+			((s3c_hsmmc_readl(HM_RSPREG2) >> 16) & 0xFF),
+			((s3c_hsmmc_readl(HM_RSPREG2) >> 8) & 0xFF),
+			(s3c_hsmmc_readl(HM_RSPREG2) & 0xFF),
+			((s3c_hsmmc_readl(HM_RSPREG1) >> 24) & 0xFF),
+			((s3c_hsmmc_readl(HM_RSPREG1) >> 16) & 0xFF));
 
 	// Send RCA(Relative Card Address). It places the card in the STBY state
 	rca = (mmc_card) ? 0x0001 : 0x0000;
