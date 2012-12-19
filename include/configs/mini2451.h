@@ -274,8 +274,8 @@
  * Clock Configuration
  */
 
-//#define CONFIG_CLK_534_133_66
-#define CONFIG_CLK_400_133_66
+#define CONFIG_CLK_534_133_66
+//#define CONFIG_CLK_400_133_66
 //#define CONFIG_CLK_267_133_66
 
 #if defined(CONFIG_CLK_400_133_66)/* Output CLK 800MHz 2:4:8*/
