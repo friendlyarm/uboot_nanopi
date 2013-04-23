@@ -59,6 +59,9 @@ lowlevel_init:
 	mov	r1, #0x0001
 	str	r1, [r0, #GPBCON_OFFSET]
 
+	mov	r1, #0x0
+	str	r1, [r0, #0x1c]
+
 	/* Disable Watchdog */
 	ldr	r0, =ELFIN_WATCHDOG_BASE
 	mov	r1, #0
