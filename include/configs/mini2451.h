@@ -2,7 +2,7 @@
  * (C) Copyright 2005-2008
  * Seung-Chull, Suh <sc.suh@samsung.com>
  *
- * Configuation settings for the SAMSUNG SMDK2450 board.
+ * Configuation settings for the FriendlyARM Mini2451 board.
  *
  * See file CREDITS for list of people who contributed to this
  * project.
@@ -95,9 +95,16 @@
  */
 
 //#define CONFIG_DRIVER_SMC911X	1	/* we have a SMC9115 on-board */
+#define CONFIG_DRIVER_DM9000	1
 
 #ifdef 	CONFIG_DRIVER_SMC911X
 #define CONFIG_DRIVER_SMC911X_BASE	0x20000000
+#undef	CONFIG_DRIVER_CS8900
+#elif defined(CONFIG_DRIVER_DM9000)
+#define CONFIG_DM9000_BASE		0x08001000
+#define DM9000_IO		(CONFIG_DM9000_BASE)
+#define DM9000_DATA		(CONFIG_DM9000_BASE+0x300c)
+#define CONFIG_DM9000_USE_16BIT
 #undef	CONFIG_DRIVER_CS8900
 #else
 #define	CONFIG_DRIVER_CS8900	1	/* we have a CS8900 on-board */
@@ -355,7 +362,7 @@
 #define CFG_ENV_SIZE		0x4000	/* Total Size of Environment Sector */
 
 /*
- * SMDK2450 board specific data
+ * MINI2451 board specific data
  */
 
 #define CONFIG_IDENT_STRING	" for MINI2451"

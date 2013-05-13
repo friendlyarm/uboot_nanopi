@@ -482,6 +482,8 @@ void start_armboot (void)
 #endif
 	eth_initialize(gd->bd);
 #endif
+	printf("\n");
+
 	/* main_loop() can return to retry autoboot, if so just run it again. */
 	for (;;) {
 		main_loop ();
