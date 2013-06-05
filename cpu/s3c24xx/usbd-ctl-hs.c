@@ -108,7 +108,8 @@ const __u8 desc_string2[]= /* Product */
 
 /* device descriptors */
 static desc_t desc;
-static device_req_t	*dev_req;
+static device_req_t	_usb_req;
+static device_req_t	*dev_req = &_usb_req;
 static get_status_t	*get_status;
 static get_intf_t	*get_intf;
 
@@ -119,12 +120,17 @@ void transfer_ep0(void);
 
 int s3c_usbc_activate (void)
 {
-	/* dont used in usb high speed, but used in common file cmd_usbd.c  */
+	/* dont used in usb high speed, but used in common
+	 * file cmd_usbd.c  */
 	return 0;
 }
 
 int s3c_usb_stop (void)
 {
+#if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_TINY2416)
+	/* Nothing here */
+#else
 	/*usb power disable */
 #if defined(CONFIG_S3C2450) || defined(CONFIG_S3C2416)
 	GPHPU_REG = (GPHPU_REG&~(3<<28))|(1<<28); /* pull-dwon enable */
@@ -134,24 +140,28 @@ int s3c_usb_stop (void)
 #endif
 	GPHCON_REG = (GPHCON_REG&~(3<<28))|(1<<28); /* output */
 	GPHDAT_REG &= ~(1<<14); /* output */
+#endif
 
-	USB_CLKCON_REG = 0;	/* usb clock disbale */
-	MISCCR_REG != (1<<12);	/* USB Port is suspend mode */
+	MISCCR_REG |= (1<<12);	/* USB Port is suspend mode */
 	PWRCFG_REG &= ~(1<<4);	/* phy power disable */
+
+	USB_PHYPWR_REG |= (1<<0); /* Force suspend */
+	USB_CLKCON_REG = 0;	/* usb clock disbale */
+
 	return 0;
 }
 
 void set_endpoint(void)
 {
 	/* EP0: control */
-	UD_INDEX_REG		= UD_INDEX_EP0;
-	UD_EP_DIR_REG		= 0x02; /* EP1=> TX, EP3=>RX */
+	UD_INDEX_REG = UD_INDEX_EP0;
+	UD_EP_DIR_REG = 0x02; /* EP1=> TX, EP3=>RX */
 
 	/* EP0~3 Interrupt enable, why set 12b~19b at F/W? */
-	UD_EP_INT_EN_REG	= 0x4d0f;
+	UD_EP_INT_EN_REG = 0x4d0f;
 
 	LOG("EP_DIR_REG : 0x%x, EP_INT_EN_REG : 0x%x \n",
-		UD_EP_DIR_REG, UD_EP_INT_EN_REG);
+			UD_EP_DIR_REG, UD_EP_INT_EN_REG);
 
 	UD_TEST_REG = 0x0000;
 
@@ -160,7 +170,6 @@ void set_endpoint(void)
 	 */
 	UD_SYS_CON_REG = UD_RRD_EN | UD_SUS_EN | UD_RST_EN;
 	UD_EP0_CON_REG = 0x0000;
-
 
 	/* EP1 dual FIFO mode enable */
 	UD_INDEX_REG = UD_INDEX_EP1;
@@ -171,8 +180,6 @@ void set_endpoint(void)
 	UD_EP_CON_REG = 0x0080;
 
 	UD_INDEX_REG = UD_INDEX_EP0;
-
-
 }
 
 #ifdef USB_CHECKSUM_EN
@@ -202,7 +209,6 @@ int verify_checksum(void)
 		printf("\nChecksum O.K !!!\n");
 		return TRUE;
 	}
-
 }
 #else /* don't use verify_checksum() */
 int verify_checksum(void)
@@ -259,7 +265,6 @@ void read_epbuf(__u16 *buf, int num)
 
 void upload_start(void)
 {
-
 	LOG("upload_size:0x%x, upload_ptr:0x%x\n", upload_size, upload_ptr);
 	if (upload_size > ep1_maxpktsize) {
 		UD_INDEX_REG = UD_INDEX_EP1;
@@ -272,8 +277,6 @@ void upload_start(void)
 		write_epbuf(upload_ptr, upload_size);
 		upload_size = 0;
 	}
-
-
 }
 
 void set_max_pktsize(__u32 speed)
@@ -566,7 +569,6 @@ void s3c_ep0_int_hndlr(void)
 	}
 
 	transfer_ep0();
-
 }
 
 void transfer_ep0(void)
@@ -726,7 +728,6 @@ void transfer_ep0(void)
 
 	default:
 		break;
-
 	}
 }
 
@@ -902,6 +903,7 @@ void download_continue(__u32 ep_status)
 		s3c_receive_done = 1;
 	}
 }
+
 /*
  * udc_int_bulkout()
  * This is function for Endpoint Three ( Bulk Out)function routine.
@@ -918,7 +920,6 @@ void udc_int_bulkout(void)
 
 	LOG("ep3_status: 0x%x, EP3: DMA_TOTAL_CNT1_REG : 0x%x, DMA_TOTAL_CNT2_REG : 0x%x\n",
 		ep3_status, UD_DMA_TOTAL_CNT1_REG, UD_DMA_TOTAL_CNT2_REG);
-
 
 	if (ep3_status & UD_EP_SENT_STALL) {
 		UD_EP_STATUS_REG = UD_EP_SENT_STALL;
@@ -1036,7 +1037,6 @@ void s3c_udc_int_hndlr(void)
 		/* Set if Device is High speed or Full speed */
 		if (usb_status & UD_INT_HSP) {
 			LOG("[%d] Host High Speed Detection\n", sb_debug_cnt++);
-			UD_SYS_STATUS_REG = UD_INT_HSP; /* interrupt clear */
 			set_max_pktsize(USB_SPEED_HIGH);
 			initialize_descriptors();
 		} else {
@@ -1135,6 +1135,10 @@ static void initialize_descriptors(void)
  */
 int s3c_usbctl_init(void)
 {
+#if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_TINY2416)
+	/* Nothing here */
+#else
 	/* usb power enable, vbus detect pull-up/down disable */
 #if defined(CONFIG_S3C2450) || defined(CONFIG_S3C2416)
 	GPHPU_REG = (GPHPU_REG&~(3<<28))|(2<<28); /* usb power pull-up enable */
@@ -1144,11 +1148,12 @@ int s3c_usbctl_init(void)
 #endif
 	GPHCON_REG = (GPHCON_REG&~(3<<28))|(1<<28); /* output */
 	GPHDAT_REG |= (1<<14); /* output */
-
 	mdelay(1);
-	/* if reset by sleep wakeup, control the retention I/O cell */
-	if (RSTSTAT_REG & 0x8) RSTCON_REG |= (1<<16);
+#endif
 
+	/* if reset by sleep wakeup, control the retention I/O cell */
+	if (RSTSTAT_REG & 0x8)
+		RSTCON_REG |= (1<<16);
 
 	MISCCR_REG = MISCCR_REG&~(1<<12);	/* USB Port is Normal mode */
 	PWRCFG_REG |= (0x1<<4);	/* phy power enable */
@@ -1159,14 +1164,20 @@ int s3c_usbctl_init(void)
 	 */
 	/* PHY 2.0 S/W reset */
 	USB_RSTCON_REG = (0x0<<2)|(0x0<<1)|(0x1<<0);
-	mdelay(10); /* phy reset must be asserted for at 10us */
+	mdelay(1); /* phy reset must be asserted for at 10us */
 
-	/*Function 2.0, Host 1.1 S/W reset*/
+	/* Function 2.0, Host 1.1 S/W reset */
 	USB_RSTCON_REG = (0x1<<2)|(0x1<<1)|(0x0<<0);
 	USB_RSTCON_REG = (0x0<<2)|(0x0<<1)|(0x0<<0);
+	mdelay(1);
 
+#if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_TINY2416)
+	USB_PHYCTRL_REG = 0;
+#else
 	/* 48Mhz,Oscillator,External X-tal,device */
 	USB_PHYCTRL_REG = (0x0<<3)|(0x1<<2)|(0x1<<1)|(0x0<<0);
+#endif
 
 	/* 48Mhz clock on ,PHY2.0 analog block power on
 	 * XO block power on,XO block power in suspend mode,
