@@ -478,6 +478,9 @@ int board_late_init (void)
 		setenv("bootcmd", boot_cmd);
 	}
 
+	/* Setup the I/O ports */
+	GPMPU_REG = 0x00000020;
+
 //	Init_LDI();
 
 	return 0;
