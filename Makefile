@@ -1909,7 +1909,7 @@ omap730p2_cs3boot_config :	unconfig
 	fi;
 	@$(MKCONFIG) -a $(call xtract_omap730p2,$@) arm arm926ejs omap730p2 NULL omap
 
-sbc2410x_config: unconfig
+sbc2410x_config:    unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm920t sbc2410x NULL s3c24x0
 
 scb9328_config	:	unconfig
@@ -1942,19 +1942,19 @@ smdk6400_config	:	unconfig
 smdk6410_config	:	unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c64xx smdk6410 samsung s3c6410 
 
-smdk6430_config :       unconfig
+smdk6430_config :   unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c64xx smdk6430 samsung s3c6430
 
 smdk2443_config	:	unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2443 samsung s3c2443
 
-smdk2450_config :       unconfig
+smdk2450_config :   unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2450 samsung s3c2450
 
-mini2451_config :       unconfig
+nanopi_config :     unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2450 samsung s3c2450
 
-smdk2416_config :       unconfig	
+smdk2416_config :   unconfig
 	@$(MKCONFIG) $(@:_config=) arm s3c24xx smdk2416 samsung s3c2416
 
 smdk2442_config	:	unconfig

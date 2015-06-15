@@ -492,7 +492,11 @@ int checkboard(void)
 {
 	vu_long *mem_reg = (vu_long*) 0x48000000;
 
+#ifdef CFG_STR_BOARD
+	printf("Board:   %s ", CFG_STR_BOARD);
+#else
 	printf("Board:   SMDK2450 ");
+#endif
 	switch ((*mem_reg>>1) & 0x7) {
 	case 0:
 		puts("SDRAM\n");

@@ -128,6 +128,7 @@ int s3c_usbc_activate (void)
 int s3c_usb_stop (void)
 {
 #if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_NANOPI) || \
 	defined(CONFIG_TINY2416)
 	/* Nothing here */
 #else
@@ -1136,6 +1137,7 @@ static void initialize_descriptors(void)
 int s3c_usbctl_init(void)
 {
 #if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_NANOPI) || \
 	defined(CONFIG_TINY2416)
 	/* Nothing here */
 #else
@@ -1172,6 +1174,7 @@ int s3c_usbctl_init(void)
 	mdelay(1);
 
 #if defined(CONFIG_MINI2451) || \
+	defined(CONFIG_NANOPI) || \
 	defined(CONFIG_TINY2416)
 	USB_PHYCTRL_REG = 0;
 #else

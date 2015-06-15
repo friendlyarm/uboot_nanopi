@@ -2,7 +2,7 @@
  * (C) Copyright 2005-2008
  * Seung-Chull, Suh <sc.suh@samsung.com>
  *
- * Configuation settings for the FriendlyARM Mini2451 board.
+ * Configuation settings for the FriendlyARM NanoPi board.
  *
  * See file CREDITS for list of people who contributed to this
  * project.
@@ -33,7 +33,7 @@
 #define	CONFIG_S3C2450		1		/* in a SAMSUNG S3C2450 SoC     */
 #define	CONFIG_S3C24XX		1		/* in a SAMSUNG S3C24XX Family  */
 #define CONFIG_SMDK2450		1		/* on a SAMSUNG SMDK2450 Board  */
-#define CONFIG_MINI2451		1		/* on a FriendlyARM MINI2451 Board  */
+#define CONFIG_NANOPI		1		/* on a FriendlyARM NANOPI Board  */
 
 /* input clock of PLL */
 #define CONFIG_SYS_CLK_FREQ	12000000	/* the SMDK2450 has 12MHz input clock */
@@ -78,6 +78,9 @@
 /* Power Management is enabled */
 #define CONFIG_PM
 
+#define CFG_STR_CPU		"S3C2451"
+#define CFG_STR_BOARD	"NanoPi"
+
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 
@@ -115,7 +118,7 @@
 /*
  * select serial console configuration
  */
-#define CONFIG_SERIAL1		1	/* we use SERIAL 1 on MINI2451 */
+#define CONFIG_SERIAL1		1	/* we use SERIAL 1 on NANOPI */
 
 #define	CFG_HUSH_PARSER			/* use "hush" command parser	*/
 #ifdef	CFG_HUSH_PARSER
@@ -246,7 +249,7 @@
  * Miscellaneous configurable options
  */
 #define	CFG_LONGHELP				/* undef to save memory		*/
-#define	CFG_PROMPT		"MINI2451 # "	/* Monitor Command Prompt	*/
+#define	CFG_PROMPT		"NanoPi # "	/* Monitor Command Prompt	*/
 #define	CFG_CBSIZE		256		/* Console I/O Buffer Size	*/
 #define	CFG_PBSIZE		384		/* Print Buffer Size */
 #define	CFG_MAXARGS		16		/* max number of command args	*/
@@ -338,11 +341,13 @@
 #define	CFG_BANK_CON3_VAL	0x80000030
 #define	CFG_BANK_REFRESH_VAL	0x00000313
 
-#define CONFIG_NR_DRAM_BANKS	2	   /* we have 2 bank of DRAM */
+#define CONFIG_NR_DRAM_BANKS	1	   /* we have 2 bank of DRAM */
 #define PHYS_SDRAM_1		0x30000000 /* SDRAM Bank #1 */
 #define PHYS_SDRAM_1_SIZE	0x04000000 /* 64 MB */
+#if 0
 #define PHYS_SDRAM_2		0x38000000 /* SDRAM Bank #2 */
 #define PHYS_SDRAM_2_SIZE	0x04000000 /* 64 MB */
+#endif
 
 #define CFG_FLASH_BASE		0x08000000
 
@@ -362,10 +367,10 @@
 #define CFG_ENV_SIZE		0x4000	/* Total Size of Environment Sector */
 
 /*
- * MINI2451 board specific data
+ * NANOPI board specific data
  */
 
-#define CONFIG_IDENT_STRING	" for MINI2451"
+#define CONFIG_IDENT_STRING	" for NanoPi"
 
 /* total memory required by uboot */
 #define CFG_UBOOT_SIZE		(2*1024*1024)
@@ -401,7 +406,7 @@
 #define CONFIG_BOOT_MOVINAND
 //#define CONFIG_BOOT_ONENAND
 
-#define CONFIG_NAND
+//#define CONFIG_NAND
 //#define CONFIG_ONENAND
 #define CONFIG_MOVINAND
 

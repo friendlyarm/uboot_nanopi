@@ -141,7 +141,11 @@ ulong get_ARMCLK(void)
 
 int print_cpuinfo(void)
 {
+#ifdef CFG_STR_CPU
+	printf("\nCPU:   %s@%dMHz\n", CFG_STR_CPU, get_ARMCLK()/1000000);
+#else
 	printf("\nCPU:   S3C2450@%dMHz\n", get_ARMCLK()/1000000);
+#endif
 	printf("       Fclk = %dMHz, Hclk = %dMHz, Pclk = %dMHz\n",
 			get_FCLK()/1000000, get_HCLK()/1000000, get_PCLK()/1000000);
 
