@@ -74,6 +74,7 @@ cscope.*
 /include/asm
 /include/asm-arm/arch
 /include/asm-arm/proc
+/include/regs.h
 /tools/bmp_logo
 /tools/envcrc
 /tools/gen_eth_addr
