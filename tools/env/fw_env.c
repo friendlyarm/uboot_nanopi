@@ -21,6 +21,8 @@
  * MA 02111-1307 USA
  */
 
+#define _LARGEFILE64_SOURCE     /* See feature_test_macros(7) */
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -395,7 +397,7 @@ int fw_setenv (int argc, char *argv[])
 static int flash_mmc (int mode)
 {
 	int fd, rc, len;
-	off_t pos;
+	long long pos;
 
 	if ((fd = open (DEVNAME (curdev), mode)) < 0) {
 		fprintf (stderr,
@@ -409,10 +411,10 @@ static int flash_mmc (int mode)
 		len += sizeof (environment.flags);
 	}
 
-	pos = lseek (fd, - DEVOFFSET (curdev), SEEK_END);
+	pos = lseek64 (fd, - (long long) DEVOFFSET (curdev), SEEK_END);
 	if (pos > 0 && pos < 2000000000) {
 		/* forward 1024 sectors for SD card */
-		pos = lseek (fd, 1024*512, SEEK_CUR);
+		pos = lseek64 (fd, 1024*512, SEEK_CUR);
 	}
 	if (pos == -1) {
 		fprintf (stderr,
