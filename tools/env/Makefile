@@ -26,12 +26,12 @@ include $(TOPDIR)/config.mk
 SRCS	:= $(obj)crc32.c  fw_env.c  fw_env_main.c
 HEADERS	:= fw_env.h
 
-CPPFLAGS := -Wall -DUSE_HOSTCC
+CPPFLAGS := -Wall -DUSE_HOSTCC -I$(TOPDIR)/include $(PLATFORM_CPPFLAGS)
 
 all:	$(obj)fw_printenv
 
 $(obj)fw_printenv:	$(SRCS) $(HEADERS)
-	$(CROSS_COMPILE)gcc $(CPPFLAGS) $(SRCS) -o $(obj)fw_printenv
+	$(CROSS_COMPILE)gcc $(CPPFLAGS) $(SRCS) -o $@
 
 clean:
 	rm -f $(obj)fw_printenv $(obj)crc32.c

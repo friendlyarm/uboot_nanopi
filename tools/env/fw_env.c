@@ -31,7 +31,12 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include <configs/nanopi.h>
+#if defined(CONFIG_BOOT_NAND)
 #include <linux/mtd/mtd.h>
+#endif
+
 #include "fw_env.h"
 
 typedef unsigned char uchar;
@@ -40,7 +45,7 @@ typedef unsigned char uchar;
 #define	CMD_SETENV	"fw_setenv"
 
 typedef struct envdev_s {
-	uchar devname[16];		/* Device name */
+	char  devname[16];		/* Device name */
 	ulong devoff;			/* Device offset */
 	ulong env_size;			/* environment size */
 	ulong erase_size;		/* device erase size */
@@ -54,7 +59,9 @@ static int curdev;
 #define ENVSIZE(i)    envdevices[(i)].env_size
 #define DEVESIZE(i)   envdevices[(i)].erase_size
 
-#define CFG_ENV_SIZE ENVSIZE(curdev)
+#ifndef CFG_ENV_SIZE
+#define CFG_ENV_SIZE  ENVSIZE(curdev)
+#endif
 
 #define ENV_SIZE      getenvsize()
 
@@ -241,7 +248,7 @@ void fw_printenv (int argc, char *argv[])
 	}
 
 	for (i = 1; i < argc; ++i) {	/* print single env variables   */
-		uchar *name = argv[i];
+		uchar *name = (uchar *) argv[i];
 		uchar *val = NULL;
 
 		for (env = environment.data; *env; env = nxt + 1) {
@@ -256,10 +263,10 @@ void fw_printenv (int argc, char *argv[])
 			val = envmatch (name, env);
 			if (val) {
 				if (!n_flag) {
-					fputs (name, stdout);
+					fputs ((char *) name, stdout);
 					putc ('=', stdout);
 				}
-				puts (val);
+				puts ((char *) val);
 				break;
 			}
 		}
@@ -290,7 +297,7 @@ int fw_setenv (int argc, char *argv[])
 	if (env_init ())
 		return (errno);
 
-	name = argv[1];
+	name = (uchar *) argv[1];
 
 	/*
 	 * search if variable with this name already exists
@@ -314,8 +321,8 @@ int fw_setenv (int argc, char *argv[])
 		/*
 		 * Ethernet Address and serial# can be set only once
 		 */
-		if ((strcmp (name, "ethaddr") == 0) ||
-			(strcmp (name, "serial#") == 0)) {
+		if ((strcmp ((char *) name, "ethaddr") == 0) ||
+			(strcmp ((char *) name, "serial#") == 0)) {
 			fprintf (stderr, "Can't overwrite \"%s\"\n", name);
 			return (EROFS);
 		}
@@ -347,7 +354,7 @@ int fw_setenv (int argc, char *argv[])
 	 * Overflow when:
 	 * "name" + "=" + "val" +"\0\0"  > CFG_ENV_SIZE - (env-environment)
 	 */
-	len = strlen (name) + 2;
+	len = strlen ((char *) name) + 2;
 	/* add '=' for first arg, ' ' for all others */
 	for (i = 2; i < argc; ++i) {
 		len += strlen (argv[i]) + 1;
@@ -361,7 +368,7 @@ int fw_setenv (int argc, char *argv[])
 	while ((*env = *name++) != '\0')
 		env++;
 	for (i = 2; i < argc; ++i) {
-		uchar *val = argv[i];
+		uchar *val = (uchar *) argv[i];
 
 		*env = (i == 2) ? '=' : ' ';
 		while ((*++env = *val++) != '\0');
@@ -384,7 +391,84 @@ int fw_setenv (int argc, char *argv[])
 	return (0);
 }
 
-static int flash_io (int mode)
+#if defined(CONFIG_BOOT_MOVINAND)
+static int flash_mmc (int mode)
+{
+	int fd, rc, len;
+	off_t pos;
+
+	if ((fd = open (DEVNAME (curdev), mode)) < 0) {
+		fprintf (stderr,
+			"Can't open %s: %s\n",
+			DEVNAME (curdev), strerror (errno));
+		return (-1);
+	}
+
+	len = sizeof (environment.crc);
+	if (HaveRedundEnv) {
+		len += sizeof (environment.flags);
+	}
+
+	pos = lseek (fd, - DEVOFFSET (curdev), SEEK_END);
+	if (pos > 0 && pos < 2000000000) {
+		/* forward 1024 sectors for SD card */
+		pos = lseek (fd, 1024*512, SEEK_CUR);
+	}
+	if (pos == -1) {
+		fprintf (stderr,
+			"seek error on %s: %s\n",
+			DEVNAME (curdev), strerror (errno));
+		return (-1);
+	}
+
+	if (mode == O_RDWR) {
+		printf ("Writing environment to %s...\n", DEVNAME (curdev));
+
+		if (write (fd, &environment, len) != len) {
+			fprintf (stderr,
+				"CRC write error on %s: %s\n",
+				DEVNAME (curdev), strerror (errno));
+			return (-1);
+		}
+		if (write (fd, environment.data, ENV_SIZE) != ENV_SIZE) {
+			fprintf (stderr,
+				"Write error on %s: %s\n",
+				DEVNAME (curdev), strerror (errno));
+			return (-1);
+		}
+
+		printf ("Done\n");
+
+	} else {
+
+		if (read (fd, &environment, len) != len) {
+			fprintf (stderr,
+				"CRC read error on %s: %s\n",
+				DEVNAME (curdev), strerror (errno));
+			return (-1);
+		}
+		if ((rc = read (fd, environment.data, ENV_SIZE)) != ENV_SIZE) {
+			fprintf (stderr,
+				"Read error on %s: %s\n",
+				DEVNAME (curdev), strerror (errno));
+			return (-1);
+		}
+	}
+
+	if (close (fd)) {
+		fprintf (stderr,
+			"I/O error on %s: %s\n",
+			DEVNAME (curdev), strerror (errno));
+		return (-1);
+	}
+
+	/* everything ok */
+	return (0);
+}
+#endif
+
+#if defined(CONFIG_BOOT_NAND)
+static int flash_mtd (int mode)
 {
 	int fd, fdr, rc, otherdev, len, resid;
 	erase_info_t erase;
@@ -562,6 +646,21 @@ static int flash_io (int mode)
 	/* everything ok */
 	return (0);
 }
+#endif
+
+static int flash_io (int mode)
+{
+#if defined(CONFIG_BOOT_MOVINAND)
+	return flash_mmc (mode);
+
+#elif defined(CONFIG_BOOT_NAND)
+	return flash_mtd (mode);
+
+#else
+	/* failed */
+	return (-1);
+#endif
+}
 
 /*
  * s1 is either a simple 'name', or a 'name=value' pair.
@@ -571,6 +670,8 @@ static int flash_io (int mode)
 
 static uchar *envmatch (uchar * s1, uchar * s2)
 {
+	if (s1 == NULL || s2 == NULL)
+		return NULL;
 
 	while (*s1 == *s2++)
 		if (*s1++ == '=')
@@ -716,14 +817,14 @@ static int parse_config ()
 #endif
 	if (stat (DEVNAME (0), &st)) {
 		fprintf (stderr,
-			"Cannot access MTD device %s: %s\n",
+			"Cannot access ENV device %s: %s\n",
 			DEVNAME (0), strerror (errno));
 		return 1;
 	}
 
 	if (HaveRedundEnv && stat (DEVNAME (1), &st)) {
 		fprintf (stderr,
-			"Cannot access MTD device %s: %s\n",
+			"Cannot access ENV device %s: %s\n",
 			DEVNAME (1), strerror (errno));
 		return 1;
 	}
